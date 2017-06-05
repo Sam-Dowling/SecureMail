@@ -21,9 +21,9 @@ class AES:
         return self.cipher_suite.encrypt(read_file(file))
 
     def Decrypt_File(self, data, file):
-        plaintext = base64_decode_safe(self.cipher_suite.decrypt(data))
-        with open(file, 'w') as f:
-            f.write(plaintext)
+        plaintext = base64_decode_safe(self.cipher_suite.decrypt(data.encode('utf-8')))
+        with open(file, 'wb') as f:
+            f.write(plaintext.encode('utf-8'))
 
 def base64_encode_safe(text):
     return base64.urlsafe_b64encode(text).decode("utf-8")

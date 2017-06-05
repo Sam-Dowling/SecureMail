@@ -4,6 +4,7 @@ import json
 import requests
 import pyotp
 import os
+import Util
 
 SERVER_ADDRESS = '127.0.0.1:8080'
 INBOX_FOLDER = 'inboxes'
@@ -18,7 +19,7 @@ def post_http(args, post_data):
 
 
 class SecureMail:
-    def __init__(self):
+    def __init__(self, key):
         self.inboxes = {}
 
     def Refresh_All(self):
@@ -41,6 +42,8 @@ class SecureMail:
                 json.dump(v.Dump(), fp)
 
     def Load(self):
+        if not os.path.exists(INBOX_FOLDER):
+            os.makedirs(INBOX_FOLDER)
         for filename in os.listdir('{}/'.format(INBOX_FOLDER)):
             with open('{}/{}'.format(INBOX_FOLDER, filename)) as fp:
                 data = json.load(fp)
@@ -54,6 +57,7 @@ class Inbox:
         self.totp = pyotp.TOTP(secret)
         self.inbox = inbox
         self.sent = sent
+        self.aes = Util.AES()
 
     def Refresh(self):
         new_messages = get_http('{}:{}'.format(self.inbox_id, self.totp.now()))
@@ -68,16 +72,25 @@ class Inbox:
     def Sent(self):
         return self.sent
 
-    def Send(self, recipient, message, file=None):
-        data = {"Body": {"Text": "{}".format(message)}}
+    def Send(self, recipient, message, file=None, encryption_key=None):
+        data = {'Body': {}}
+
+        if encryption_key:
+            self.aes.Set_Key(encryption_key)
+            message = self.aes.Encrypt(message)
+            data['Body']['Encrypted'] = True
+
+        data['Body']['Text'] = "{}".format(message)
+
         if file:
-            data["body"]["Attachment"] = {
-                "File": '{}'.format(file), "Data": "BASE64 Data"}
+            file_data = Util.read_file(file)
+            data["Body"]["Attachment"] = {
+                "File": '{}'.format(file), "Data": self.aes.Encrypt(file_data) if encryption_key else file_data}
 
         r = post_http('{}:{}/{}'.format(self.inbox_id,
                                         self.totp.now(), recipient), json.dumps(data))
         if r.status_code == 201:  # Created
-            self.sent.append(r.json())
+            self.sent.append()
 
     def Dump(self):
         return {'inbox_id': self.inbox_id, 'secret': self.totp.secret,
@@ -85,21 +98,21 @@ class Inbox:
 
 
 # # - USAGE -
-# secure_mail = SecureMail()
-#
+secure_mail = SecureMail("secret")
+
 # secure_mail.New_Inbox('bob')
 # secure_mail.New_Inbox('tom')
-#
-# bob_id = secure_mail.Inbox('bob').Inbox_ID()
-#
-# secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!")
-#
-# print(secure_mail.Inbox('tom').Sent())
-#
-# secure_mail.Inbox('bob').Refresh()
-#
-# print(secure_mail.Inbox('bob').Mail())
-#
-# secure_mail.Save()
-#
-# secure_mail.Load()
+
+secure_mail.Load()
+
+bob_id = secure_mail.Inbox('bob').Inbox_ID()
+
+secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!", encryption_key="Secret")
+
+print(secure_mail.Inbox('tom').Sent()[0]['body']['text'])
+
+secure_mail.Inbox('bob').Refresh()
+
+print(secure_mail.Inbox('bob').Mail())
+
+secure_mail.Save()

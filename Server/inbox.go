@@ -19,6 +19,7 @@ type Attachment struct{
 }
 
 type Body struct{
+	Encrypted bool
 	Text string
 	Attachment Attachment
 }

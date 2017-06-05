@@ -13,6 +13,8 @@ INBOX_FOLDER = 'mail'
 def get_http(args):
     return requests.get('http://{}/{}'.format(SERVER_ADDRESS, args)).json()
 
+def delete_http(args):
+    return requests.delete('http://{}/{}'.format(SERVER_ADDRESS, args))
 
 def post_http(args, post_data):
     return requests.post('http://{}/{}'.format(SERVER_ADDRESS, args), data=post_data)
@@ -35,6 +37,11 @@ class SecureMail:
 
     def List_Inboxes(self):
         return list(self.inboxes.keys())
+
+    def Delete(self, alias):
+        i = self.inboxes[alias]
+        delete_http('{}:{}'.format(i.inbox_id, i.totp.now()))
+        del self.inboxes[alias]
 
     def Save(self):
         if not os.path.exists(INBOX_FOLDER):
@@ -109,12 +116,15 @@ class Inbox:
 #
 # bob_id = secure_mail.Inbox('bob').Inbox_ID()
 #
-# secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!", file='test.txt', encryption_key="Secret")
+# secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!", encryption_key="Secret")
 #
 # print(secure_mail.Inbox('tom').Sent())
 #
 # secure_mail.Inbox('bob').Refresh()
 #
 # print(secure_mail.Inbox('bob').Mail())
+# 
+# secure_mail.Delete('bob')
+# secure_mail.Delete('tom')
 #
 # secure_mail.Save()

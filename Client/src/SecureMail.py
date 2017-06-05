@@ -6,6 +6,7 @@ import pyotp
 import os
 
 SERVER_ADDRESS = '127.0.0.1:8080'
+INBOX_FOLDER = 'inboxes'
 
 
 def get_http(args):
@@ -36,12 +37,12 @@ class SecureMail:
 
     def Save(self):
         for k, v in self.inboxes.items():
-            with open('inboxes/{}.json'.format(k), 'w') as fp:
+            with open('{}/{}.json'.format(INBOX_FOLDER, k), 'w') as fp:
                 json.dump(v.Dump(), fp)
 
     def Load(self):
-        for filename in os.listdir('inboxes/'):
-            with open('inboxes/{}'.format(filename)) as fp:
+        for filename in os.listdir('{}/'.format(INBOX_FOLDER)):
+            with open('{}/{}'.format(INBOX_FOLDER, filename)) as fp:
                 data = json.load(fp)
                 self.inboxes[os.path.splitext(filename)[0]] = Inbox(
                     data["inbox_id"], data["secret"], data["inbox"], data["sent"])

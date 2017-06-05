@@ -25,6 +25,12 @@ var routes = Routes{
 		InboxGet,
 	},
 	Route{
+		"Delete Inbox",
+		"DELETE",
+		"/{mail_id}:{totp_token}",
+		InboxDelete,
+	},
+	Route{
 		"Mail Sent",
 		"POST",
 		"/{sender_id}:{totp_token}/{recipient_id}",

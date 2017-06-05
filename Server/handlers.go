@@ -50,6 +50,36 @@ func InboxGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func InboxDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var mail_id int
+	var totp_token string
+	var err error
+	if mail_id, err = strconv.Atoi(vars["mail_id"]); err != nil {
+		panic(err)
+	}
+	if totp_token = vars["totp_token"]; err != nil {
+		panic(err)
+	}
+
+	if totp.Validate(totp_token, RepoGetUser(mail_id)) {
+
+		RepoDeleteInbox(mail_id)
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusOK)
+		if err := json.NewEncoder(w).Encode(mail_id); err != nil {
+			panic(err)
+		}
+
+	} else { // 403 bad token
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusForbidden)
+		if err := json.NewEncoder(w).Encode(jsonErr{Code: http.StatusForbidden, Text: "Bad TOTP Token"}); err != nil {
+			panic(err)
+		}
+	}
+}
+
 func GenNewSecret() string {
 	key, err := totp.Generate(totp.GenerateOpts{
 		Issuer:      "SecureMail",

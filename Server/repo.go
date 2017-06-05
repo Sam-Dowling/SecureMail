@@ -3,36 +3,36 @@ package main
 import (
 	"time"
 	"math/rand"
+	"sync"
 )
 
 var inboxes = make(map[int]Inbox)
 
 var users = make(map[int]string)
 
-// Give us some seed data
-// func init() {
-//
-// 	user1 := RepoRegister(GenNewSecret())
-// 	user2 := RepoRegister(GenNewSecret())
-//
-// 	fmt.Println(user1)
-//
-// 	RepoCreateMail(Mail{
-// 		Header: Header{user2.ID, user1.ID, time.Now()},
-// 		Body:   Body{"Text of email goes here", Attachment{"img.jpg", "base64 data"}},
-// 	})
-// }
+var mutex = &sync.Mutex{}
 
 func RepoFindInbox(mail_id int) Inbox {
+	mutex.Lock()
 	if i, ok := inboxes[mail_id]; ok {
 		delete(inboxes, mail_id) // Clear inbox
+		mutex.Unlock()
 		return i
 	}
 	return Inbox{}
 }
 
+func RepoDeleteInbox(mail_id int) {
+	mutex.Lock()
+	delete(inboxes, mail_id)
+	delete(users, mail_id)
+	mutex.Unlock()
+}
+
 func RepoCreateMail(m Mail) Mail {
+	mutex.Lock()
 	inboxes[m.Header.Recipient] = append(inboxes[m.Header.Recipient], m)
+	mutex.Unlock()
 	return m
 }
 

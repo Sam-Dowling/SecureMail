@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -13,11 +14,15 @@ func Logger(inner http.Handler, name string) http.Handler {
 		inner.ServeHTTP(w, r)
 
 		log.Printf(
-			"%s\t%s\t%s\t%s",
-			r.Method,
-			r.RequestURI,
-			name,
+			"%s%s%s\t%s",
+			leftjust(r.Method, 8),
+			leftjust(r.RequestURI, 31),
+			leftjust(name, 16),
 			time.Since(start),
 		)
 	})
+}
+
+func leftjust(s string, n int) string {
+	return s + strings.Repeat(" ", n-len(s))
 }

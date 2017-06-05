@@ -79,3 +79,12 @@ POST 127.0.0.1:8080/{Sender_ID}:{TOTP_Token}/{Recipient_ID}
 - If encryption is used, "Text" and the attachment "Data" should be encrypted with AES by the client.
 - If the message is sent successfully; the message object will be returned with the "Header" populated.
 - the TOTP_Token must be generated and sent like before.
+
+### Delete Inbox & User
+```
+DELETE 127.0.0.1:8080/{Inbox_ID}:{TOTP_Token}
+=> Inbox_ID
+```
+- This will flush the inbox and make it availiable for others to register.
+- It will not delete any messages sent by this inbox.
+- Users are encouraged to treat inboxes as disposable.

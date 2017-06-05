@@ -2,8 +2,7 @@
 
 A Secure, Anonymous messaging API Server.
 
-The data is sent accross the network in plaintext.
-SSL should be enabled and encryption done client-side.
+SSL should be enabled and encryption enabled in the client.
 
 ## Getting Started
 

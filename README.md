@@ -8,7 +8,7 @@ The server is extremely lightweight with features such as
 - In-memory datastore.
 - POP3 like functionality where inboxes are flushed once read by the client.
 - TOTP tokens used for authenticating users.
-- Inboxes are easily disposable and very lightweight. Users are encouraged to treat inboxes as temporary & disposable.
+- Inboxes are easily disposable and very lightweight.
 
 The [Client](Client) is written in Python with GTK3.
 

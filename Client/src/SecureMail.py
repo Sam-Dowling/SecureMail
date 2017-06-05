@@ -7,7 +7,7 @@ import os
 import Util
 
 SERVER_ADDRESS = '127.0.0.1:8080'
-INBOX_FOLDER = 'inboxes'
+INBOX_FOLDER = 'mail'
 
 
 def get_http(args):
@@ -37,6 +37,8 @@ class SecureMail:
         return list(self.inboxes.keys())
 
     def Save(self):
+        if not os.path.exists(INBOX_FOLDER):
+            os.makedirs(INBOX_FOLDER)
         for k, v in self.inboxes.items():
             with open('{}/{}.json'.format(INBOX_FOLDER, k), 'w') as fp:
                 json.dump(v.Dump(), fp)
@@ -90,7 +92,7 @@ class Inbox:
         r = post_http('{}:{}/{}'.format(self.inbox_id,
                                         self.totp.now(), recipient), json.dumps(data))
         if r.status_code == 201:  # Created
-            self.sent.append()
+            self.sent.append(r.json())
 
     def Dump(self):
         return {'inbox_id': self.inbox_id, 'secret': self.totp.secret,
@@ -98,21 +100,21 @@ class Inbox:
 
 
 # # - USAGE -
-secure_mail = SecureMail("secret")
-
+# secure_mail = SecureMail("secret")
+#
 # secure_mail.New_Inbox('bob')
 # secure_mail.New_Inbox('tom')
-
-secure_mail.Load()
-
-bob_id = secure_mail.Inbox('bob').Inbox_ID()
-
-secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!", encryption_key="Secret")
-
-print(secure_mail.Inbox('tom').Sent()[0]['body']['text'])
-
-secure_mail.Inbox('bob').Refresh()
-
-print(secure_mail.Inbox('bob').Mail())
-
-secure_mail.Save()
+#
+# secure_mail.Load()
+#
+# bob_id = secure_mail.Inbox('bob').Inbox_ID()
+#
+# secure_mail.Inbox('tom').Send(bob_id, "Hello Bob!", file='test.txt', encryption_key="Secret")
+#
+# print(secure_mail.Inbox('tom').Sent())
+#
+# secure_mail.Inbox('bob').Refresh()
+#
+# print(secure_mail.Inbox('bob').Mail())
+#
+# secure_mail.Save()

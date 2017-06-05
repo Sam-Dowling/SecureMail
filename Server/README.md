@@ -47,6 +47,7 @@ GET 127.0.0.1:8080/{ID}:{TOTP_Token}
     "Timestamp": "0001-01-01T00:00:00Z"
   },
   "Body": {
+    "Encrypted": false,
     "Text": "Text of message goes here",
     "Attachment": {
       "File": "cat.jpg",
@@ -55,15 +56,17 @@ GET 127.0.0.1:8080/{ID}:{TOTP_Token}
   }
 }
 ```
-- The TOTP_Token generated cannot be used for replay attacks
+- The TOTP_Token cannot be used for replay attacks
 - Once an inbox has been accessed; the inbox is cleared.
+- It is the clients responsibility to store the messages once retrieved from the server.
 
 ### Send Message
 ```
 POST 127.0.0.1:8080/{Sender_ID}:{TOTP_Token}/{Recipient_ID}
-=>
+->
 {
   "Body": {
+    "Encrypted": false,
     "Text": "Text of message goes here",
     "Attachment": {
       "File": "cat.jpg",
@@ -74,5 +77,6 @@ POST 127.0.0.1:8080/{Sender_ID}:{TOTP_Token}/{Recipient_ID}
 ```
 - Post the "Body" section of the message to the above endpoint
 - "Attachment" is optional.
-- If the message is sent successfully; the object will be returned with the "Header" populated
-- the TOTP_Token must be generated as like before.
+- If encryption is used, "Text" and the attachment "Data" should be encrypted with AES by the client.
+- If the message is sent successfully; the message object will be returned with the "Header" populated.
+- the TOTP_Token must be generated and sent like before.

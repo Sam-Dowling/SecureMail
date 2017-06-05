@@ -105,6 +105,7 @@ func MailPost(w http.ResponseWriter, r *http.Request) {
 			if err := json.NewEncoder(w).Encode(err); err != nil {
 				panic(err)
 			}
+			return
 		}
 
 		mail.Header.Sender = sender_id

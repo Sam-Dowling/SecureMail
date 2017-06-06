@@ -1,4 +1,10 @@
-from GUI import Login
+from GUI import *
+
+class LoginImplementation(Login):
+	def connect_button(self, button):
+		print("Login")
+		
 
 if __name__ == '__main__':
-	gui = Login("res/Login.glade", "SecureMail_Login")
+	gui = LoginImplementation("res/Login.glade", "SecureMail_Login"
+			)

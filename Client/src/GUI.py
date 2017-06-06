@@ -10,17 +10,17 @@ class GUI:
 		self.set_components()
 		self.connect_buttons()
 
-	def connect_gladefile(gladefile):
+	def connect_gladefile(self, gladefile):
 		self.builder = Gtk.Builder()
 		self.builder.add_from_file(gladefile)
 
-	def set_components():
+	def set_components(self):
 		raise NotImplementedError("Subclass must implement abstract method")
 
-	def connect_button():
+	def connect_button(self):
 		raise NotImplementedError("Subclass must implement abstract method")
 
-	def start_window(window_name):
+	def start_window(self, window_name):
 		self.window = self.builder.get_object(window_name)
 		self.window.connect("delete-event", Gtk.main_quit)
 		self.window.show_all()

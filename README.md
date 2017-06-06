@@ -19,6 +19,7 @@ See [Server](Server) and [Client](Client) folders for detailed installation and 
 ### Collaborators
 - [Luke Bluett](https://github.com/LukeBluett)
 - [Sam Dowling](https://samdowling.com)
+- [Johnjoe Landers](https://github.com/johnjoelanders)
 
 ### Note
 

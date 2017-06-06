@@ -1,52 +1,16 @@
+<form class="form-signin">
+  <h2 class="form-signin-heading">Secure Mail</h2>
 
-<!DOCTYPE html>
-<html lang="en" ng-app="securemail">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+  <label for="inputID" class="sr-only">Inbox ID</label>
+  <input type="text" id="inputID" ng-model="id" class="form-control" placeholder="Inbox ID" required autofocus>
 
-    <title>Secure Mail</title>
+  <label for="inputTOTP" class="sr-only">TOTP Token</label>
+  <input type="token" id="inputTOTP" ng-model="secret" class="form-control" placeholder="TOTP Token" required>
 
-    <!-- Bootstrap core CSS -->
-    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/signin.css" rel="stylesheet">
-
-    <script src="dist/js/angular.min.js"></script>
-    <script src="js/inbox.js"></script>
-	<!--<script src="dist/js/jsOTP.min.js"></script>
-	<script>
-	//var totp = new jsOTP.totp();
-	//var timeCode = totp.getOtp();
-</script> -->
-
-  </head>
-
-  <body>
-
-    <div class="container">
-
-      <form class="form-signin" ng-controller="RequestInbox">
-        <h2 class="form-signin-heading">Secure Mail</h2>
-
-        <label for="inputID" class="sr-only">Inbox ID</label>
-        <input type="text" id="inputID" ng-model="id" class="form-control" placeholder="Inbox ID" required autofocus>
-
-        <label for="inputTOTP" class="sr-only">TOTP Token</label>
-        <input type="token" id="inputTOTP" ng-model="secret" class="form-control" placeholder="TOTP Token" required>
-
-        <button class="btn btn-lg btn-primary col-xs-6" type="submit" ng-click="requestInboxClick()">Sign in</button>
-        <button class="btn btn-lg btn-success col-xs-6" type="button" ng-click="registerClick()">Register</button>
-      </form>
-      <div ng-controller="Register">
-			<p>The ID is {{register.ID}}</p>
-			<p>The secret is {{register.Secret}}</p>
-		</div>
-    </div>
-
-  </body>
-</html>
+  <button class="btn btn-lg btn-primary col-xs-6" type="submit" ng-click="requestInboxClick()">Sign in</button>
+  <button class="btn btn-lg btn-success col-xs-6" type="button" ng-click="Register()">Register</button>
+</form>
+<div>
+  <p>The ID is {{RegisterDetails.ID}}</p>
+  <p>The secret is {{RegisterDetails.Secret}}</p>
+</div>

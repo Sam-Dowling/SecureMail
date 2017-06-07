@@ -1,0 +1,16 @@
+<form class="form-signin">
+  <h2 class="form-signin-heading">Secure Mail</h2>
+
+  <label for="inputID" class="sr-only">Inbox ID</label>
+  <input type="text" id="inputID" ng-model="id" class="form-control" placeholder="Inbox ID" required autofocus>
+
+  <label for="inputTOTP" class="sr-only">TOTP Token</label>
+  <input type="token" id="inputTOTP" ng-model="secret" class="form-control" placeholder="TOTP Token" required>
+
+  <button class="btn btn-lg btn-primary col-xs-6" type="submit" ng-click="requestInboxClick()">Sign in</button>
+  <button class="btn btn-lg btn-success col-xs-6" type="button" ng-click="Register()">Register</button>
+</form>
+<div>
+  <p>The ID is {{RegisterDetails.ID}}</p>
+  <p>The secret is {{RegisterDetails.Secret}}</p>
+</div>

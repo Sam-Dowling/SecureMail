@@ -67,4 +67,4 @@ class Main(GUI):
 	def on_button_mar_clicked(self, button):
 		raise NotImplementedError("Subclass must implement abstract method")
 
-          	  
+

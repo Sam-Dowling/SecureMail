@@ -2,13 +2,15 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk 
+from gi.repository import GObject
 
 class GUI:
 	def __init__(self, gladefile, window_name):
 		self.connect_gladefile(gladefile)
 		self.set_components()
 		self.connect_buttons()
+		self.__window_name = window_name
 
 	def connect_gladefile(self, gladefile):
 		self.builder = Gtk.Builder()
@@ -20,8 +22,8 @@ class GUI:
 	def connect_button(self):
 		raise NotImplementedError("Subclass must implement abstract method")
 
-	def start_window(self, window_name):
-		self.window = self.builder.get_object(window_name)
+	def start_window(self):
+		self.window = self.builder.get_object(self.__window_name)
 		self.window.connect("delete-event", Gtk.main_quit)
 		self.window.show_all()
 		Gtk.main()
@@ -29,8 +31,8 @@ class GUI:
 
 class Login(GUI):
 	def set_components(self):
-		self.__entry_username = self.builder.get_object("login_entry_username")
-		self.__entry_password = self.builder.get_object("login_entry_password")
+		self.entry_username = self.builder.get_object("login_entry_username")
+		self.entry_password = self.builder.get_object("login_entry_password")
 
 	def connect_buttons(self):
 		self.button = self.builder.get_object("login_button_login")
